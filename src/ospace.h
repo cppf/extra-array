@@ -27,7 +27,7 @@
 
 
 #pragma region function
-// Open space with static memory.
+// Open with static memory.
 // args: space, at, size.
 #define OSPACE_FD_OPEN(N, T) \
 	inline T* N##_open(void* o, void* at, size_t size)
@@ -41,7 +41,7 @@
 	}
 
 
-// Open space with heap memory.
+// Open with heap memory.
 // args: space, size.
 #define OSPACE_FD_OPENHEAP(N, T) \
 	inline T* N##_openHeap(void* o, size_t size)
@@ -55,7 +55,7 @@
 	}
 
 
-// Close space opened with heap memory.
+// Close, if opened with heap memory.
 // args: space.
 #define OSPACE_FD_CLOSE(N, T) \
 	inline T* N##_close(void* o)
@@ -68,7 +68,7 @@
 	}
 
 
-// Resize space, if opened with heap memory.
+// Resize if opened with heap memory.
 // args: space, size.
 #define OSPACE_FD_RESIZE(N, T) \
 	inline T* N##_resize(void* o, size_t size)
