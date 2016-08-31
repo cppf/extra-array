@@ -93,7 +93,7 @@ o.at[o.size-1] = 0x600DB055;
 
 ```c
 // close space
-SInt_close();
+SInt_close(&o);
 ```
 
 
@@ -110,4 +110,10 @@ SInt_openHeap(&o, 128);
 
 // resize to size 256
 SInt_resize(&o, 256);
+
+// print size of space
+printf("%d", o.size);
+
+// close space
+SInt_close(&o);
 ```
