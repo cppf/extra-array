@@ -1,6 +1,6 @@
-# ospace
+# oarray
 
-Generic memory region (space) in C.
+Generic array in C.
 
 
 ## structure
@@ -16,28 +16,28 @@ size : size_t
 ### declare
 
 ```c
-// Declare a space type.
+// Declare array type.
 // This defines structure and declares functions.
-OSPACE_DECLARE(name, type)
+OARRAY_DECLARE(name, type)
 ```
 
 ```c
-// declare int space
-OSPACE_DECLARE(SInt, int)
+// declare int array
+OARRAY_DECLARE(AInt, int)
 ```
 
 
 ## define
 
 ```c
-// Define a space type.
-// This define functions.
-OSPACE_DEFINE(name, type)
+// Define array type.
+// This defines functions.
+OARRAY_DEFINE(name, type)
 ```
 
 ```c
 // define int space
-OSPACE_DEFINE(SInt, int)
+OARRAY_DEFINE(AInt, int)
 ```
 
 
@@ -45,20 +45,20 @@ OSPACE_DEFINE(SInt, int)
 
 ```c
 // Open with static memory.
-#_open(space, at, size)
+#_open(array, at, size)
 
 ```
 
 ```c
-// define space and char buffer
-SInt o;
+// define array and char buffer
+AInt o;
 char buffer[32];
 
 // open with buffer
-SInt_open(&o, buffer, 32/sizeof(int));
+AInt_open(&o, buffer, 32/sizeof(int));
 
-// print size of space
-printf("%d", o.size);
+// print size of array
+printf("%zu", o.size);
 
 // write 0x0BADB055 at last index
 o.at[o.size-1] = 0x0BADB055;
@@ -69,15 +69,15 @@ o.at[o.size-1] = 0x0BADB055;
 
 ```c
 // Open with heap memory.
-#_openHeap(space, size)
+#_openHeap(array, size)
 ```
 
 ```c
 // open of size 64
-SInt_openHeap(&o, 64);
+AInt_openHeap(&o, 64);
 
-// print size of space
-printf("%d", o.size);
+// print size of array
+printf("%zu", o.size);
 
 // write 0x600DB055 at last index
 o.at[o.size-1] = 0x600DB055;
@@ -88,12 +88,12 @@ o.at[o.size-1] = 0x600DB055;
 
 ```c
 // Close, if opened with heap memory.
-#_close(space)
+#_close(array)
 ```
 
 ```c
-// close space
-SInt_close(&o);
+// close array
+AInt_close(&o);
 ```
 
 
@@ -101,19 +101,19 @@ SInt_close(&o);
 
 ```c
 // Resize if opened with heap memory.
-#_resize(space, size)
+#_resize(array, size)
 ```
 
 ```c
 // open of size 128
-SInt_openHeap(&o, 128);
+AInt_openHeap(&o, 128);
 
 // resize to size 256
-SInt_resize(&o, 256);
+AInt_resize(&o, 256);
 
-// print size of space
-printf("%d", o.size);
+// print size of array
+printf("%zu", o.size);
 
-// close space
-SInt_close(&o);
+// close array
+AInt_close(&o);
 ```
