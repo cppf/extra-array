@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "oarray.h"
+#include "coll/olist.h"
 
 
 OARRAY_DECLARE(AInt, int)

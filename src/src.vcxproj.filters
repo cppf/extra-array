@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\coll">
+      <UniqueIdentifier>{b7c4c346-8c17-45f8-a836-f2bb01e69402}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -20,8 +23,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="oarray.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="coll\oarray.h">
+      <Filter>Header Files\coll</Filter>
+    </ClInclude>
+    <ClInclude Include="coll\olist.h">
+      <Filter>Header Files\coll</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -145,7 +145,8 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="oarray.h" />
+    <ClInclude Include="coll\oarray.h" />
+    <ClInclude Include="coll\olist.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
