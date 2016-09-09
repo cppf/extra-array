@@ -26,7 +26,7 @@
     <ClInclude Include="coll\oarray.h">
       <Filter>Header Files\coll</Filter>
     </ClInclude>
-    <ClInclude Include="coll\olist.h">
+    <ClInclude Include="coll\ostack.h">
       <Filter>Header Files\coll</Filter>
     </ClInclude>
   </ItemGroup>

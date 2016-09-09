@@ -1,5 +1,5 @@
-#ifndef _OLIST_H_
-#define _OLIST_H_
+#ifndef _OSTACK_H_
+#define _OSTACK_H_
 
 
 #pragma region required headers
@@ -10,12 +10,12 @@
 
 
 #pragma region type
-// Structure for list.
+// Structure for stack.
 // args: name, type.
-#define OLIST_TS(N, T) \
+#define OSTACK_TS(N, T) \
 	typedef struct _##N { \
 		T* at; \
-		size_t room; \
+		size_t space; \
 		size_t size; \
 	} N
 #pragma endregion
@@ -24,44 +24,73 @@
 
 #pragma region function
 // Open with static memory.
-// args: list, at, size.
-#define OLIST_FB_OPEN(N, T) { \
+// args: stack, at, space.
+#define OSTACK_FB_OPEN(N, T) { \
 		N* z = (N*)o; \
+		T* _at = N##_oarray_open(o, at, space); \
 		z->size = 0; \
-		return N##_oarray_open(o, at, size); \
+		return _at; \
 	}
 
 
 // Open with heap memory.
-// args: list, size.
-#define OLIST_FB_OPENHEAP(N, T) { \
+// args: stack, space.
+#define OSTACK_FB_OPENHEAP(N, T) { \
 		N* z = (N*)o; \
+		T* at = N##_oarray_openHeap(o, size); \
 		z->size = 0; \
-		return N##_oarray_openHeap(o, size); \
+		return at; \
 	}
 
 
-// Resize, if opened with heap memory.
-// args: list, size.
-#define OLIST_FB_RESIZE(N, T) { \
+// Reopen with different space (heap only).
+// args: stack, space.
+#define OSTACK_FB_REOPEN(N, T) { \
 		N* z = (N*)o; \
-		if(size < z->size) z->size = size; \
-		return N##_oarray_resize(o, size); \
+		T* at = N##_oarray_reopen(o, space); \
+		if(space < z->size) z->size = space; \
+		return at; \
 	}
-
-
-// Get room.
-// args: list.
-#define OLIST_FS_ROOM(N, T) \
-	inline size_t N##_room(void* o)
 
 
 // Get size.
-// args: list.
-#define OLIST_FB_SIZE(N, T) { \
+// args: stack.
+#define OSTACK_FB_SIZE(N, T) { \
 		N* z = (N*)o; \
 		return z->size; \
 	}
+
+
+// Get top offset of stack.
+// args: stack.
+#define OSTACK_FD_TOP(N, T) \
+	inline size_t N##_top(void* o)
+
+#define OSTACK_FB_TOP(N, T) { \
+		return N##_size() - 1; \
+	}
+
+
+// Push value to end.
+#define OLIST_FS_PUSH(N, T) \
+	inline T N##_push(void* o, T v)
+
+#define OLIST_FB_PUSH(N, T) { \
+		
+
+
+#define OLIST_FD_POP(N, T) \
+	inline T N##_pop(void* o)
+
+#define OLIST_FD_PUSHAT(N, T) \
+	inline T N##_pushAt(void* o, size_t i, T v)
+
+#define OLIST_FD_POPAT(N, T) \
+	inline T N##_popAt(void* o, size_t i)
+
+#define OLIST_FD_REMOVE(N, T) \
+
+
 #pragma endregion
 
 

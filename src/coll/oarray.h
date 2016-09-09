@@ -57,7 +57,7 @@
 
 #define OARRAY_FB_REOPEN(N, T) { \
 		N* z = (N*)o; \
-		return N##_open(o, realloc(z->at, space*sizeof(T), space)); \
+		return N##_open(o, realloc(z->at, space*sizeof(T)), space); \
 	}
 
 
@@ -87,7 +87,7 @@
 // Get space.
 // args: array.
 #define OARRAY_FS_SPACE(N, T) \
-	inline T* N##_space(void* o)
+	inline size_t N##_space(void* o)
 
 #define OARRAY_FB_SPACE(N, T) { \
 		N* z = (N*)o; \
@@ -185,6 +185,32 @@
 	}
 
 
+// Count number of values in range, forward.
+// args: array, start, end.
+#define OARRAY_FS_COUNT(N, T) \
+	inline size_t N##_count(void* o, size_t i, size_t ie)
+
+#define OARRAY_FB_COUNT(N, T) { \
+		size_t n = 0; \
+		for(; i!=ie; i=N##_next(o, i)) \
+			n++; \
+		return n; \
+	}
+
+
+// Count number of values in range, backward.
+// args: array, start, end.
+#define OARRAY_FS_COUNTBACK(N, T) \
+	inline size_t N##_countBack(void* o, size_t i, size_t ie)
+
+#define OARRAY_FB_COUNTBACK(N, T) { \
+		size_t n = 0; \
+		for(; i!=ie; i=N##_prev(o, i)) \
+			n++; \
+		return n; \
+	}
+
+
 // Get value at index.
 // args: array, index.
 #define OARRAY_FS_GET(N, T) \
@@ -192,6 +218,34 @@
 
 #define OARRAY_FB_GET(N, T) { \
 		return N##_at(o)[i]; \
+	}
+
+
+// Get values to destination, forward.
+// args: array, start, end, dest, dest-size.
+#define OARRAY_FS_GETMANY(N, T) \
+	inline size_t N##_getMany(void* o, size_t i, size_t ie, void* d, size_t ds)
+
+#define OARRAY_FB_GETMANY(N, T) { \
+		size_t n = 0; \
+		T* pd = (T*)d; \
+		for(; n<ds && i!=ie; i=N##_next(o, i)) \
+			pd[n++] = N##_get(o, i); \
+		return n; \
+	}
+
+
+// Get values to destination, backward.
+// args: array, start, end, dest, dest-size.
+#define OARRAY_FS_GETBACKMANY(N, T) \
+	inline size_t N##_getBackMany(void* o, size_t i, size_t ie, void* d, size_t ds)
+
+#define OARRAY_FB_GETBACKMANY(N, T) { \
+		size_t n = 0; \
+		T* pd = (T*)d; \
+		for(; n<ds && i!=ie; i=N##_prev(o, i)) \
+			pd[n++] = N##_get(o, i); \
+		return n; \
 	}
 
 
@@ -205,39 +259,148 @@
 	}
 
 
+// Set values from source, forward.
+// args: array, start, end, dest, dest-size.
+#define OARRAY_FS_SETMANY(N, T) \
+	inline size_t N##_setMany(void* o, size_t i, size_t ie, void* d, size_t ds)
+
+#define OARRAY_FB_SETMANY(N, T) { \
+		size_t n = 0; \
+		T* pd = (T*)d; \
+		for(; n<ds && i!=ie; i=N##_next(o, i)) \
+			N##_set(o, i, pd[n++]); \
+		return n; \
+	}
+
+
+// Set values from source, backward.
+// args: array, start, end, dest, dest-size.
+#define OARRAY_FS_SETBACKMANY(N, T) \
+	inline size_t N##_setBackMany(void* o, size_t i, size_t ie, void* d, size_t ds)
+
+#define OARRAY_FB_SETBACKMANY(N, T) { \
+		size_t n = 0; \
+		T* pd = (T*)d; \
+		for(; n<ds && i!=ie; i=N##_prev(o, i)) \
+			N##_set(o, i, pd[n++]); \
+		return n; \
+	}
+
+
 // Fill with value.
 // args: array, start, end, value.
 #define OARRAY_FS_FILL(N, T) \
-	inline T N##_fill(void* o, size_t i0, size_t i1, T v)
+	inline size_t N##_fill(void* o, size_t i, size_t ie, T v)
 
 #define OARRAY_FB_FILL(N, T) { \
-		for(; N##_hasNext(o, i0); i0=N##_next(o, i0)) \
-			N##_set(o, i0, v); \
-		return v; \
+		size_t n = 0; \
+		for(; i!=ie; n++, i=N##_next(o, i)) \
+			N##_set(o, i, v); \
+		return n; \
+	}
+
+
+// Copy values within array, forward to upward.
+// args: array, start, end, dest-start.
+#define OARRAY_FS_COPY(N, T) \
+	inline size_t N##_copy(void* o, size_t i, size_t ie, size_t di)
+
+#define OARRAY_FB_COPY(N, T) { \
+		size_t n = 0; \
+		for(; i!=ie; n++, i=N##_next(o, i), di=N##_next(o, di)) \
+			N##_set(o, di, N##_get(o, i)); \
+		return n++; \
+	}
+
+
+// Copy values within array, forward to downward.
+// args: array, start, end, dest-start.
+#define OARRAY_FS_COPYDOWN(N, T) \
+	inline size_t N##_copyDown(void* o, size_t i, size_t ie, size_t di)
+
+#define OARRAY_FB_COPYDOWN(N, T) { \
+		size_t n = 0; \
+		for(; i!=ie; n++, i=N##_next(o, i), di=N##_prev(o, di)) \
+			N##_set(o, di, N##_get(o, i)); \
+		return n++; \
+	}
+
+
+// Copy values within array, backward to upward.
+// args: array, start, end, dest-start.
+#define OARRAY_FS_COPYBACK(N, T) \
+	inline size_t N##_copyBack(void* o, size_t i, size_t ie, size_t di)
+
+#define OARRAY_FB_COPYBACK(N, T) { \
+		size_t n = 0; \
+		for(; i!=ie; n++, i=N##_prev(o, i), di=N##_next(o, di)) \
+			N##_set(o, di, N##_get(o, i)); \
+		return n; \
+	}
+
+
+// Copy values within array, backward to downward.
+// args: array, start, end, dest-start.
+#define OARRAY_FS_COPYBACKDOWN(N, T) \
+	inline size_t N##_copyBackDown(void* o, size_t i, size_t ie, size_t di)
+
+#define OARRAY_FB_COPYBACKDOWN(N, T) { \
+		size_t n = 0; \
+		for(; i!=ie; n++, i=N##_prev(o, i), di=N##_prev(o, di)) \
+			N##_set(o, di, N##_get(o, i)); \
+		return n; \
 	}
 
 
 // Find index of value, forward.
-// args: list, start, value.
+// args: array, start, end, value.
 #define OARRAY_FS_FIND(N, T) \
-	inline size_t N##_find(void* o, size_t i, T v)
+	inline size_t N##_find(void* o, size_t i, size_t ie, T v)
 
 #define OARRAY_FB_FIND(N, T) { \
-		for(; N##_hasNext(o, i); i=N##_next(o, i)) \
+		for(; i!=ie; i=N##_next(o, i)) \
 			if(N##_get(o, i) == v) return i; \
 		return -1; \
 	}
 
 
+// Find index of values, forward.
+// args: array, start, end, value, dest, dest-size.
+#define OARRAY_FS_FINDMANY(N, T) \
+	inline size_t N##_findMany(void* o, size_t i, size_t ie, T v, void* d, size_t ds)
+
+#define OARRAY_FB_FINDMANY(N, T) { \
+		size_t n = 0; \
+		T* pd = (T*)d; \
+		for(; n<ds && i!=ie; i=N##_next(o, i)) \
+			if(N##_get(o, i) == v) pd[n++] = i; \
+		return n; \
+	}
+
+
 // Find index of value, backward.
-// args: list, start, value.
+// args: array, start, end, value.
 #define OARRAY_FS_FINDBACK(N, T) \
-	inline size_t N##_findBack(void* o, size_t i, T v)
+	inline size_t N##_findBack(void* o, size_t i, size_t ie, T v)
 
 #define OARRAY_FB_FINDBACK(N, T) { \
-		for(; N##_hasPrev(o, i); i=N##_prev(o, i)) \
+		for(; i!=ie; i=N##_prev(o, i)) \
 			if(N##_get(o, i) == v) return i; \
 		return -1; \
+	}
+
+
+// Find index of values, backward.
+// args: array, start, value, dest, dest-size.
+#define OARRAY_FS_FINDBACKMANY(N, T) \
+	inline size_t N##_findBackMany(void* o, size_t i, size_t ie, T v, void* d, size_t ds)
+
+#define OARRAY_FB_FINDBACKMANY(N, T) { \
+		size_t n = 0; \
+		T* pd = (T*)d; \
+		for(; n<ds && i!=ie; i=N##_prev(o, i)) \
+			if(N##_get(o, i) == v) pd[n++] = i; \
+		return n; \
 	}
 #pragma endregion
 
@@ -268,11 +431,23 @@
 	OARRAY_FS_HASPREV(N, T); \
 	OARRAY_FS_NEXT(N, T); \
 	OARRAY_FS_PREV(N, T); \
+	OARRAY_FS_COUNT(N, T); \
+	OARRAY_FS_COUNTBACK(N, T); \
 	OARRAY_FS_GET(N, T); \
+	OARRAY_FS_GETMANY(N, T); \
+	OARRAY_FS_GETBACKMANY(N, T); \
 	OARRAY_FS_SET(N, T); \
+	OARRAY_FS_SETMANY(N, T); \
+	OARRAY_FS_SETBACKMANY(N, T); \
 	OARRAY_FS_FILL(N, T); \
+	OARRAY_FS_COPY(N, T); \
+	OARRAY_FS_COPYDOWN(N, T); \
+	OARRAY_FS_COPYBACK(N, T); \
+	OARRAY_FS_COPYBACKDOWN(N, T); \
 	OARRAY_FS_FIND(N, T); \
+	OARRAY_FS_FINDMANY(N, T); \
 	OARRAY_FS_FINDBACK(N, T); \
+	OARRAY_FS_FINDBACKMANY(N, T);
 
 
 // Declare array types and functions.
@@ -315,16 +490,40 @@
 	OARRAY_FB_NEXT(N, T) \
 	OARRAY_FS_PREV(N, T) \
 	OARRAY_FB_PREV(N, T) \
+	OARRAY_FS_COUNT(N, T) \
+	OARRAY_FB_COUNT(N, T) \
+	OARRAY_FS_COUNTBACK(N, T) \
+	OARRAY_FB_COUNTBACK(N, T) \
 	OARRAY_FS_GET(N, T) \
 	OARRAY_FB_GET(N, T) \
+	OARRAY_FS_GETMANY(N, T) \
+	OARRAY_FB_GETMANY(N, T) \
+	OARRAY_FS_GETBACKMANY(N, T) \
+	OARRAY_FB_GETBACKMANY(N, T) \
 	OARRAY_FS_SET(N, T) \
 	OARRAY_FB_SET(N, T) \
+	OARRAY_FS_SETMANY(N, T) \
+	OARRAY_FB_SETMANY(N, T) \
+	OARRAY_FS_SETBACKMANY(N, T) \
+	OARRAY_FB_SETBACKMANY(N, T) \
 	OARRAY_FS_FILL(N, T) \
 	OARRAY_FB_FILL(N, T) \
+	OARRAY_FS_COPY(N, T) \
+	OARRAY_FB_COPY(N, T) \
+	OARRAY_FS_COPYDOWN(N, T) \
+	OARRAY_FB_COPYDOWN(N, T) \
+	OARRAY_FS_COPYBACK(N, T) \
+	OARRAY_FB_COPYBACK(N, T) \
+	OARRAY_FS_COPYBACKDOWN(N, T) \
+	OARRAY_FB_COPYBACKDOWN(N, T) \
 	OARRAY_FS_FIND(N, T) \
 	OARRAY_FB_FIND(N, T) \
+	OARRAY_FS_FINDMANY(N, T) \
+	OARRAY_FB_FINDMANY(N, T) \
 	OARRAY_FS_FINDBACK(N, T) \
-	OARRAY_FB_FINDBACK(N, T)
+	OARRAY_FB_FINDBACK(N, T) \
+	OARRAY_FS_FINDBACKMANY(N, T) \
+	OARRAY_FB_FINDBACKMANY(N, T)
 #pragma endregion
 
 
