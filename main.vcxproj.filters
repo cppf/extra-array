@@ -23,10 +23,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="coll\oarray.h">
+    <ClInclude Include="coll\earray.h">
       <Filter>Header Files\coll</Filter>
     </ClInclude>
-    <ClInclude Include="coll\ostack.h">
+    <ClInclude Include="coll\estack.h">
       <Filter>Header Files\coll</Filter>
     </ClInclude>
   </ItemGroup>

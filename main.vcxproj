@@ -145,8 +145,8 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="coll\oarray.h" />
-    <ClInclude Include="coll\ostack.h" />
+    <ClInclude Include="coll\earray.h" />
+    <ClInclude Include="coll\estack.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LICENSE" />
