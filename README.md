@@ -1,6 +1,5 @@
-# oarray
-
 Generic array in C.
+> Download: [header file](https://raw.githubusercontent.com/cppf/extra-array/master/coll/earray.h).
 
 
 ## structure
@@ -117,3 +116,7 @@ printf("%zu", o.size);
 // close array
 AInt_close(&o);
 ```
+<br><br>
+
+
+[![Merferry](https://i.imgur.com/eKtn1hj.jpg)](https://merferry.github.io)
