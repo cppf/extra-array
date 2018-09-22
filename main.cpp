@@ -1,9 +1,9 @@
 #include <stdio.h>
-#include "coll/olist.h"
+#include "coll/earray.h"
 
 
-OARRAY_DECLARE(AInt, int)
-OARRAY_DEFINE(AInt, int)
+EARRAY_DECLARE(AInt, int)
+EARRAY_DEFINE(AInt, int)
 
 
 int main() {

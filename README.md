@@ -18,12 +18,12 @@ size : size_t
 ```c
 // Declare array type.
 // This defines structure and declares functions.
-OARRAY_DECLARE(name, type)
+EARRAY_DECLARE(name, type)
 ```
 
 ```c
 // declare int array
-OARRAY_DECLARE(AInt, int)
+EARRAY_DECLARE(AInt, int)
 ```
 
 
@@ -32,12 +32,12 @@ OARRAY_DECLARE(AInt, int)
 ```c
 // Define array type.
 // This defines functions.
-OARRAY_DEFINE(name, type)
+EARRAY_DEFINE(name, type)
 ```
 
 ```c
 // define int space
-OARRAY_DEFINE(AInt, int)
+EARRAY_DEFINE(AInt, int)
 ```
 
 
